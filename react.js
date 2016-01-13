@@ -83,6 +83,7 @@ var React = {
   unmountComponentAtNode: ReactMount.unmountComponentAtNode,
   isValidElement: ReactElement.isValidElement,
   withContext: ReactContext.withContext,
+  CSSPropertyOperations: _dereq_(5),
 
   // Hook for JSX spread, don't use this for anything else.
   __spread: assign
