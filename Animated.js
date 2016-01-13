@@ -929,6 +929,9 @@ function createAnimatedComponent(Component: any): any {
         if (this.refs[refName].setNativeProps) {
           var value = this._propsAnimated.getAnimatedValue();
           this.refs[refName].setNativeProps(value);
+        } else if (this.refs[refName].getDOMNode().setAttribute) {
+          var value = this._propsAnimated.getAnimatedValue();
+          var strStyle = React.CSSPropertyOperations.setValueForStyles(this.refs[refName].getDOMNode(), value.style, this.refs[refName]);
         } else {
           this.forceUpdate();
         }
