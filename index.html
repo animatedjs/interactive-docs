@@ -324,15 +324,20 @@ examplify(React.createClass({
       anim: new Animated.Value(1),
     };
   },
+  componentWillMount: function() {
+    this.interpolate = this.state.anim.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['260deg', '0deg']
+    });
+
+    this.interpolate.addListener(v => console.log(v));
+  },
   render: function() {
     return (
       <Animated.div
         style={{
           transform: [
-            {rotate: this.state.anim.interpolate({
-              inputRange: [0, 1],
-              outputRange: ['260deg', '0deg']
-            })},
+            {rotate: this.interpolate},
             {scale: this.state.anim},
           ]
         }}
