@@ -682,11 +682,14 @@ class AnimatedVec2 extends AnimatedWithChildren {
 class AnimatedInterpolation extends AnimatedWithChildren {
   _parent: Animated;
   _interpolation: (input: number) => number | string;
+  _listeners: {[key: number]: ValueListenerCallback};
+  _parentListener: number;
 
   constructor(parent: Animated, interpolation: (input: number) => number | string) {
     super();
     this._parent = parent;
     this._interpolation = interpolation;
+    this._listeners = {};
   }
 
   getValue(): number | string {
@@ -696,6 +699,23 @@ class AnimatedInterpolation extends AnimatedWithChildren {
       'Cannot interpolate an input which is not a number.'
     );
     return this._interpolation(parentValue);
+  }
+
+  addListener(callback: ValueListenerCallback): number {
+    if (!this._parentListener) {
+      this._parentListener = parent.addListener(() => {
+        for (var key in this._listeners) {
+          this._listeners[key]({value: this.getValue()});
+        }
+      })
+    }
+    var id = _uniqueId++;
+    this._listeners[id] = callback;
+    return id;
+  }
+
+  removeListener(id: number): void {
+    delete this._listeners[id];
   }
 
   interpolate(config: InterpolationConfigType): AnimatedInterpolation {
@@ -708,6 +728,7 @@ class AnimatedInterpolation extends AnimatedWithChildren {
 
   detach(): void {
     this._parent.removeChild(this);
+    this._parentListener = this._parent.removeListener(this._parentListener);
   }
 }
 
