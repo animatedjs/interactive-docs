@@ -703,7 +703,7 @@ class AnimatedInterpolation extends AnimatedWithChildren {
 
   addListener(callback: ValueListenerCallback): number {
     if (!this._parentListener) {
-      this._parentListener = parent.addListener(() => {
+      this._parentListener = this._parent.addListener(() => {
         for (var key in this._listeners) {
           this._listeners[key]({value: this.getValue()});
         }
